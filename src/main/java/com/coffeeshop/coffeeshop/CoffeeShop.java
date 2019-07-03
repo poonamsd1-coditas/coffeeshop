@@ -30,6 +30,9 @@ public class CoffeeShop {
 					orderMap.put(itemName, itemQuantity);
 				}
 			}
+			else {
+				System.out.println("Err : The item " + itemName + " is invalid. Please try again");
+			}
 		}
 		return orderMap;
 	}
@@ -44,15 +47,32 @@ public class CoffeeShop {
 	}
 
 	public static void printBill(Map<String, Double> menuMap, Map<String, Integer> orderMap) {
-		System.out.println("--------------------------------");
-		System.out.println("ITEM\t\tQTY\t\tPRICE(INR)");
-		System.out.println("--------------------------------");
+		System.out.println("-------------------------------------------\n" +
+							"ITEM\t\t\tQTY\t\tRATE\tAMOUNT(INR)\n" +
+							"-------------------------------------------");
+		Double subTotal = 0.0;
 		for (Map.Entry<String, Integer> entry : orderMap.entrySet()) {
-			Double price = menuMap.get(entry.getKey());
-			Double total = price * entry.getValue();
-			System.out.println(entry.getKey() + "\t\t" + entry.getValue() + "\t\t" + total);
+			Double rate = menuMap.get(entry.getKey());
+			Double amount = rate * entry.getValue();
+			subTotal += amount;
+			System.out.println(entry.getKey() + "\t\t\t" + entry.getValue() + "\t\t" + rate + "\t" + amount);
 		}
-		System.out.println("--------------------------------");
+		System.out.println("-------------------------------------------");
+		System.out.println("\t\t\t\t\tSub Total : " + subTotal);
+		Double taxes = calculateTaxes(subTotal);
+		Double grandTotal = subTotal + taxes;
+		System.out.println("-------------------------------------------");
+		System.out.println("\t\t\t\t\tGrand Total : " + grandTotal);
+		System.out.println("-------------------------------------------");
+	}
+
+	public static Double calculateTaxes(Double subTotal) {
+		Double sgst = (AppConstants.SGST_VALUE / 100) * subTotal;
+		Double cgst = (AppConstants.CGST_VALUE / 100) * subTotal;
+		Double taxes = sgst + cgst;
+		System.out.println("\t\t\t\t\tSGST @ " + AppConstants.SGST_VALUE + "% : " + sgst);
+		System.out.println("\t\t\t\t\tCGST @ " + AppConstants.CGST_VALUE + "% : " + cgst);
+		return taxes;
 	}
 
 	public static String getCustomerName() {
@@ -69,7 +89,7 @@ public class CoffeeShop {
 		System.out.println("Hi " + customerName + ", welcome to The Virtual Coffee Shop");
 	}
 
-	public static void printMenu() {
+	/*public static void printMenu() {
 		System.out.println("\t\t-------------------------------\n" +
 				"\t\t\t\t\tM E N U\n" +
 				"\t\t-------------------------------\n" +
@@ -83,6 +103,6 @@ public class CoffeeShop {
 				"\t\t8) Toffee Latte \t\t \t144\n" +
 				"\t\t9) Vanilla Latte \t\t \t144\n" +
 				"\t\t-------------------------------\n");
-	}
+	}*/
 
 }
